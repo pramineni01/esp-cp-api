@@ -1,0 +1,1 @@
+SELECT wb.id, wb.template_id, wb.da_dataset_id, wb.scope, wb.last_modified_by, wb.last_modified, wb.status FROM cp_dev.workbook wb, cp_dev.users u WHERE u.id={{.UserID | quote}} AND wb.id = u.workbook_id {{if gt .ID 0}} AND wb.id={{.ID}} {{else if (ne .Limit 0)}} LIMIT {{.Limit}}{{end}};

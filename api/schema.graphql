@@ -1,0 +1,106 @@
+scalar Time
+scalar JSON
+
+
+# Local types
+enum CPWorkbookStatus {
+    PLANNING
+    REVIEWED
+    PUBLISHED
+    REJECTED
+}
+
+type CPTemplate @key(fields: "id") {
+  id: ID!
+  name: String!
+  definition: String
+}
+
+type CPPin @key(fields: "id") {
+  id: ID!
+  title: String
+  description: String
+  creation_date: Time!
+  visualization_flag: Boolean!
+  workbook: CPWorkbook!
+  filters: JSON!
+  context: JSON!
+}
+
+type CPWorkbook @key(fields: "id") {
+  id: ID!
+  template: CPTemplate!
+  scope: JSON!
+  dadatasetID: ID!   
+  status: CPWorkbookStatus!
+  last_modified: Time
+  last_modified_by: User @provides(fields: "username")
+
+  comments: [CPWorkbookComment!]
+}
+
+
+type CPWorkbookComment @key(fields: "workbookID") {
+   id: ID!
+   workbookID: ID!
+   comment: String!
+   user: User @provides(fields: "username")
+}
+
+type CPUser @key(fields: "id") {
+  id: ID!
+  workbookID: ID!
+  user: User @provides(fields: "username")
+}
+
+# Query
+extend type Query {
+
+  getCPTemplate(id: ID!): CPTemplate 
+  getCPTemplates(limit: Int): [CPTemplate!]
+
+  getCPWorkbook(id: ID!): CPWorkbook
+  getCPWorkbooks(limit: Int): [CPWorkbook!]
+
+  getCPPin(id: ID!): CPPin
+  getCPPins(limit: Int): [CPPin!]
+
+  # getCPWorkbookComment(id: ID!): CPWorkbookComment
+  getCPWorkbookComments(workbookID: ID!, limit: Int): [CPWorkbookComment!]
+  # Sandbox(id: ID!, userID: userID!): Sandbox
+  # Sandboxes(userID: userID!): [Sandbox]
+}
+
+# Mutation inputs
+input CPPinInput {
+  title: String!
+  description: String
+  filters: JSON!
+  context: JSON!
+  visualization_flag: Boolean
+  workbookID: ID!
+}
+
+# Mutations
+type Mutation {
+  updateCPWorkbook (
+      workbookID: ID!
+      Status: CPWorkbookStatus!
+  ): CPWorkbook,
+
+  addCPPin (
+    pin: CPPinInput
+  ): CPPin
+
+  addCPWorkbookComment (
+    workbookID: ID!
+    comment: String
+  ): Boolean
+}
+
+# External Types
+extend type User @key(fields: "userId") {
+    userId: String! @external
+    firstName: String @external
+    username: String @external
+}

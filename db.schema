@@ -1,0 +1,72 @@
+-- cp_dev.pin definition
+
+CREATE TABLE `pin` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `workbook_id` int(10) unsigned NOT NULL,
+  `user_id` varchar(36) NOT NULL,
+  `title` varchar(256) NOT NULL,
+  `description` varchar(256) NOT NULL,
+  `filters` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL CHECK (json_valid(`filters`)),
+  `visualization_flag` tinyint(1) DEFAULT 0,
+  `context` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL CHECK (json_valid(`context`)),
+  `creation_date` timestamp NOT NULL DEFAULT current_timestamp(),
+  PRIMARY KEY (`id`),
+  KEY `id` (`id`,`user_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 WITH SYSTEM VERSIONING;
+
+-- cp_dev.sandbox definition
+
+CREATE TABLE `sandbox` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `workbook_id` int(10) unsigned NOT NULL,
+  `user_id` varchar(36) NOT NULL,
+  `name` varchar(256) NOT NULL,
+  `description` varchar(256) NOT NULL,
+  `due_date` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  PRIMARY KEY (`id`),
+  KEY `id` (`id`,`workbook_id`,`user_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 WITH SYSTEM VERSIONING;
+
+-- cp_dev.template definition
+
+CREATE TABLE `template` (
+  `id` tinyint(3) unsigned NOT NULL AUTO_INCREMENT,
+  `name` varchar(256) NOT NULL,
+  `definition` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL CHECK (json_valid(`definition`)),
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 WITH SYSTEM VERSIONING;
+
+-- cp_dev.workbook definition
+
+CREATE TABLE `workbook` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `template_id` tinyint(4) DEFAULT NULL,
+  `da_dataset_id` int(10) unsigned NOT NULL,
+  `scope` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL CHECK (json_valid(`scope`)),
+  `last_modified_by` varchar(36) NOT NULL,
+  `last_modified` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  `status` enum('planning','reviewed','published','rejected') DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `id` (`id`,`template_id`,`da_dataset_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 WITH SYSTEM VERSIONING;
+
+-- cp_dev.workbook_comments definition
+
+CREATE TABLE `workbook_comments` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `workbook_id` varchar(36) NOT NULL,
+  `user_id` varchar(36) NOT NULL,
+  `comment` varchar(256) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `id` (`id`,`user_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 WITH SYSTEM VERSIONING;
+
+-- cp_dev.users definition
+
+CREATE TABLE `users` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `workbook_id` int(10) unsigned NOT NULL,
+  `role` varchar(256) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `id` (`id`,`workbook_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 WITH SYSTEM VERSIONING;

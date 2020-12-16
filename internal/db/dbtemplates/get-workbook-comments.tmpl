@@ -1,0 +1,1 @@
+SELECT id, workbook_id, user_id, comment FROM cp_dev.workbook_comments WHERE workbook_id={{.WorkbookID}} AND user_id={{.UserID | quote}} ORDER BY id DESC {{if gt .Limit 0}} LIMIT {{.Limit}}{{end}};

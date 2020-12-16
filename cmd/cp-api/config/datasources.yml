@@ -1,0 +1,7 @@
+cp:
+ user: root
+ password: y1i8me3RReBnc1ZXfCf9CIRe
+ hostname: 10.40.1.8
+ port: 3306
+ db_name: cp_dev
+ type: mysql

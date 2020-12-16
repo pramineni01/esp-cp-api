@@ -1,0 +1,1 @@
+SELECT id, name, definition FROM cp_dev.template {{ if gt .ID 0}} WHERE id={{.ID}} {{else if (ne .Limit 0)}} LIMIT {{.Limit}}{{end}};

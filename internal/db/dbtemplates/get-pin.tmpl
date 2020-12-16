@@ -1,0 +1,1 @@
+SELECT id, workbook_id, title, description, filters, context, visualization_flag, creation_date FROM cp_dev.pin WHERE user_id = {{.UserID | quote}} {{if gt .ID 0}} AND id={{.ID}} {{else if (ne .Limit 0)}} LIMIT {{.Limit}}{{end}};

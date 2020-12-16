@@ -1,0 +1,1 @@
+UPDATE cp_dev.workbook SET status={{.Status | quote}}, last_modified_by={{.UserID | quote}}, last_modified=current_timestamp() WHERE id={{.ID}};
